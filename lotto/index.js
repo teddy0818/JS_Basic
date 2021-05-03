@@ -9,7 +9,7 @@ while(candidate.length > 0) {
     const value = spliceArray[0];
     shuffle.push(value);
 }
-console.log(shuffle);
+console.log(shuffle)
 
 const winBalls = shuffle.splice(0, 6); // 0~5
 const bonusBall = shuffle.splice(6, 1) // 6
@@ -18,6 +18,7 @@ console.log(bonusBall);
 
 const resultTag = document.querySelector('#result');
 /*
+// 일반 for 문
 for (let i=0; i<6; i++) { // 클로저 문제는 let 나오면서 없어짐
     setTimeout(() => {
         const ball = document.createElement('div');
@@ -28,6 +29,8 @@ for (let i=0; i<6; i++) { // 클로저 문제는 let 나오면서 없어짐
     }, 1000 * (i + 1))
 }
 */
+//forEach문
+//일반볼 6개
 winBalls.forEach((num, index) => {
     setTimeout(() => {
         const ball = document.createElement('div');
@@ -38,6 +41,7 @@ winBalls.forEach((num, index) => {
     }, 1000 * (index + 1))
 });
 
+//보너스볼 1개
 setTimeout(() => {
     const bonusTag = document.querySelector('.bonus');
     const ball = document.createElement('div');
