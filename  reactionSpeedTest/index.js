@@ -23,7 +23,7 @@ $screen.addEventListener('click', () => {
         clearTimeout(calcTime);
         alert('성급하셨습니다!');
         $screen.className = 'waiting'
-        $screen.textContent = '초록색이 뜨면 클릭하세요';
+        $screen.textContent = '클릭해서 시작하세요';
     } else if($screen.className == 'now') {
         clickCount = 0;
         endTime = new Date();
@@ -31,9 +31,12 @@ $screen.addEventListener('click', () => {
         alert(`${resultTime}ms 걸리셨습니다`);
         $recentResult.textContent = `최근 기록 : ${resultTime} ms`;
         records.push(resultTime);
-        records.forEach(function(item, index) {
-            sumTime += item;
-        })
+        // records.forEach(function(item, index) {
+        //     sumTime += item;
+        // })
+        sumTime += resultTime;
+        // console.log(sumTime);
+        // console.log(records.length);
         averageTime = Math.floor(sumTime / records.length);
         $result.textContent = `평균 기록 : ${averageTime} ms`;
         $screen.className = 'waiting';
