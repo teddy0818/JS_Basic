@@ -23,6 +23,7 @@ const checkWinner = (target) => {
     let cellIndex = target.cellIndex; // target = td
 
     console.log(turn);
+    //수정 123
     
     // target의 index 구하기
     // rows.forEach((row, ri) => {
@@ -81,7 +82,7 @@ const checkWinnerAndDrop = (target) => {
         }  
 
         //무승부
-        const draw = rows.flat().every((cell) => cell.textContent); // 문자열은 null 아니면 true
+        const draw = rows.flat().every((cell) => cell.textContent); // 문자열은 빈값 아니면 true
         if(!checkWinner(target) && draw) {
             $result.textContent = `무승부!!`
         }
