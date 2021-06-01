@@ -16,46 +16,23 @@ rows = [
 */
 
 
-const callback = (event) => {
-    //event.stopPropagation(); // 이벤트 버블링 방지
-    // 칸에 글자가 있나?
-    if(event.target.textContent) return; // event.target : td
-    event.target.textContent = turn;
-
-    //event.currentTarget : table
-
-    //승부 판단하기
-    if(checkWinner(event.target)) {
-        $result.textContent = `${turn} 님의 승리!!`
-        $table.removeEventListener('click', callback);
-    }  
-
-   //무승부
-   count++;
-   if(!checkWinner(event.target) && count == 9) {
-    $result.textContent = `무 승부!!`
-   }
-   
-
-    // 턴넘기기
-    turn = turn === 'O' ? 'X' : 'O';
-    
-}
-
 const checkWinner = (target) => {
     //foreach 쓰면 좋은점 : index를 매길 수 있음
-    let rowIndex;
-    let ceilIndex;
+    // let rowIndex;
+    let rowIndex = target.parentNode.rowIndex; // target = tr
+    let cellIndex = target.cellIndex; // target = td
+
+    console.log(turn);
     
     // target의 index 구하기
-    rows.forEach((row, ri) => {
-        row.forEach((ceil, ci) => {
-            if(turn === ceil.textContent) {
-                rowIndex = ri;
-                ceilIndex = ci;
-            }
-        })
-    }) 
+    // rows.forEach((row, ri) => {
+    //     row.forEach((cell, ci) => {
+    //         if(turn === cell.textContent) {
+    //             rowIndex = ri;
+    //             cellIndex = ci;
+    //         }
+    //     })
+    // }) 
 
     //승리 조건
     let hasWinner = false;
@@ -70,9 +47,9 @@ const checkWinner = (target) => {
         }
     
     //승리 조건 - 세로 완성
-    if(rows[0][ceilIndex].textContent === turn &&
-    rows[1][ceilIndex].textContent === turn &&
-    rows[2][ceilIndex].textContent === turn
+    if(rows[0][cellIndex].textContent === turn &&
+    rows[1][cellIndex].textContent === turn &&
+    rows[2][cellIndex].textContent === turn
             ) {
                 hasWinner = true;
             }
@@ -96,17 +73,61 @@ const checkWinner = (target) => {
     return hasWinner;
 }
 
+const checkWinnerAndDrop = (target) => {
+        //승부 판단하기
+        if(checkWinner(target)) {
+            $result.textContent = `${turn} 님의 승리!!`;
+            $table.removeEventListener('click',callback);
+        }  
+
+        //무승부
+        const draw = rows.flat().every((cell) => cell.textContent);
+        if(!checkWinner(target) && draw) {
+            $result.textContent = `무승부!!`
+        }
+
+        //턴 넘기기
+        turn = turn == 'O' ? 'X' : 'O';
+}
+
+let clickable = true;
+const callback = (event) => {
+    if (!clickable) return;
+
+    //event.stopPropagation(); // 이벤트 버블링 방지
+    // 칸에 글자가 있나?
+    if(event.target.textContent) return; // event.target : td
+    event.target.textContent = turn;
+    //event.currentTarget : table
+    checkWinnerAndDrop(event.target);
+
+    // 컴퓨터 대전 기능 추가
+    if(turn === 'X') {
+        clickable = false; 
+            setTimeout(() => {
+            // 컴퓨터 턴일땐 클릭 못하게
+            // filter: 조건에 해당하는 애들만 선택해줌
+            const emptyCells = rows.flat().filter((v) => !v.textContent); 
+            const randomCell  = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            randomCell.textContent = 'X';
+            checkWinnerAndDrop(event.target);
+            clickable = true;
+        }, 1000)
+        }
+    
+}
+
 //반복문은 최대한 짧게 쓰는게 편하다
 for(let i=0; i<3; i++) {
     const $tr = document.createElement('tr');
-    const ceils = [];
+    const cells = [];
     for(let z=0; z<3; z++) {
         const $td = document.createElement('td');
-        ceils.push($td);
+        cells.push($td);
         // $td.addEventListener('click', callback); - 이벤트 버블로 대체
         $tr.append($td); 
     }
-    rows.push(ceils);
+    rows.push(cells);
     $table.append($tr); 
 }
 
