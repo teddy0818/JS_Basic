@@ -38,7 +38,7 @@ const checkWinner = (target) => {
     let hasWinner = false;
 
 
-    //승리 조건 - 가로 완성
+    //승리 조건 - 세로 완성
     if(rows[rowIndex][0].textContent === turn &&
     rows[rowIndex][1].textContent === turn &&
     rows[rowIndex][2].textContent === turn
@@ -46,7 +46,7 @@ const checkWinner = (target) => {
             hasWinner = true;
         }
     
-    //승리 조건 - 세로 완성
+    //승리 조건 - 가로 완성
     if(rows[0][cellIndex].textContent === turn &&
     rows[1][cellIndex].textContent === turn &&
     rows[2][cellIndex].textContent === turn
@@ -81,7 +81,7 @@ const checkWinnerAndDrop = (target) => {
         }  
 
         //무승부
-        const draw = rows.flat().every((cell) => cell.textContent);
+        const draw = rows.flat().every((cell) => cell.textContent); // 문자열은 null 아니면 true
         if(!checkWinner(target) && draw) {
             $result.textContent = `무승부!!`
         }
@@ -97,6 +97,7 @@ const callback = (event) => {
     if (!clickable) return;
 
     //event.stopPropagation(); // 이벤트 버블링 방지
+
     // 칸에 글자가 있나?
     if(event.target.textContent) return; // event.target : td
     event.target.textContent = turn;
