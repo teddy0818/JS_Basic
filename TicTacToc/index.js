@@ -90,6 +90,8 @@ const checkWinnerAndDrop = (target) => {
         turn = turn == 'O' ? 'X' : 'O';
 }
 
+// setTimeout() 할때 주로 쓰이는 기법
+// setTimeout() 실행되는 동안 클리금지
 let clickable = true;
 const callback = (event) => {
     if (!clickable) return;
