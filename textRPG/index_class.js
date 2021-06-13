@@ -92,7 +92,7 @@ class Game {
       this.updateMonsterStat();
     } else if (input === '2') { // 회복
       const { hero, monster } = this;
-      hero.hp = Math.min(hero.maxHp, hero.hp + 20);
+      hero.hp = Math.min(hero.maxHp, hero.hp + 20); // 둘 중 작은 숫자를 선택
       monster.attack(hero);
       this.showMessage('체력을 조금 회복했다!');
       this.updateHeroStat();

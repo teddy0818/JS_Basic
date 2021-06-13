@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    #wrapper {
+        width: 400px;
+    }
+
+    .card {
+        display: inline-block;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        width: 70px;
+        height: 100px;
+        perspective: 140px;
+    }
+
+    .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
+
+    .card.flipped .card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .card-front {
+        background: navy;
+    }
+
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 1px solid black;
+        backface-visibility: hidden;
+    }
+
+    .card-back {
+        transform: rotateY(180deg);
+    }
+    </style>
+    <title>짝맞추기</title>
+</head>
+<body>
+    <div id="wrapper"></div>
+    <script>
+        const $wrapper = document.querySelector('#wrapper');
+
+        const total = 12;
+        const colors = ['red', 'orange', 'yellow', 'green', 'white', 'pink']; // rgb, hex값으로 해도 됨
+        let colorCopy = colors.concat(colors);
+        let shuffled = [];
+
+        function shuffle() { // 피셔-에이츠 사용
+            for (let i = 0; colorCopy.length > 0; i++) {
+                const randomIndex = Math.floor(Math.random() * colorCopy.length);
+                shuffled = shuffled.concat(colorCopy.splice(randomIndex, 1));
+                //concat 은 배열 하나 정도는 풀어서 합쳐준다
+            }
+        }
+
+        function createCard(i) { // div.card > div.card-inner > (div.card-front + div.card-back)
+             const card = document.createElement('div');
+             card.className = 'card'; // .card 태그 생성
+             const cardInner = document.createElement('div');
+             cardInner.className = 'card-inner' // .card-inner 태그 생성 
+             const cardFront = document.createElement('div');
+             cardFront.className = 'card-front' // .card-front 태그 생성 
+             const cardBack = document.createElement('div');
+             cardBack.className = 'card-back' // .card-back 태그 생성  
+             cardBack.style.backgroundColor = shuffled[i]; 
+             cardInner.appendChild(cardFront);
+             cardInner.appendChild(cardBack);
+             card.appendChild(cardInner);
+             return card;
+        }
+
+        function startGame() {
+            shuffle();
+            for (let i = 0; i < total; i++) {
+                const card = createCard(i);
+                $wrapper.appendChild(card);
+            }
+        }
+        startGame();
+
+
+    </script>
+</body> 
+</html>
