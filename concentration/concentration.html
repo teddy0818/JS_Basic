@@ -90,7 +90,22 @@
                 $wrapper.appendChild(card);
             }
         }
+
         startGame();
+        
+        document.querySelectorAll('.card').forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('flipped'); // 여기에 점(.) 붙이지마라!!
+            }, 1000 + 100 * index);
+        })
+        
+        setTimeout(() => {
+            document.querySelectorAll('.card').forEach((card, index) => {
+                card.classList.remove('flipped');
+            })
+        }, 5000);
+
+
 
 
     </script>
