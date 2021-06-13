@@ -58,6 +58,8 @@
         const colors = ['red', 'orange', 'yellow', 'green', 'white', 'pink']; // rgb, hex값으로 해도 됨
         let colorCopy = colors.concat(colors);
         let shuffled = [];
+        let clicked = [];
+        let completed = [];
 
         function shuffle() { // 피셔-에이츠 사용
             for (let i = 0; colorCopy.length > 0; i++) {
@@ -83,10 +85,44 @@
              return card;
         }
 
+        function onClickCard() {
+            // this는 card
+            this.classList.toggle('flipped');
+            clicked.push(this);
+            if (clicked.length !== 2) {
+                return;
+            }
+            // clicked[0] (card) 태그 안에서 .card-back 선택
+            const firstBackColor = clicked[0].querySelector('.card-back').style.backgroundColor;
+            const secondBackColor = clicked[1].querySelector('.card-back').style.backgroundColor;
+            if (firstBackColor === secondBackColor) { // 두 카드가 같으면
+                // completed.push(clicked[0]);
+                // completed.push(clicked[1]);
+                // clicked = [];
+                completed = completed.concat(clicked);
+                clicked = [];
+                if(completed.length === total) {
+                    alert('축하합니다!');
+                    return;
+                }
+                return;
+            }
+
+            //틀렸으면
+            setTimeout(() => {
+                clicked[0].classList.remove('flipped');
+                clicked[1].classList.remove('flipped');
+                clicked = [];
+            }, 1000)
+
+
+        }
+
         function startGame() {
             shuffle();
             for (let i = 0; i < total; i++) {
                 const card = createCard(i);
+                card.addEventListener('click', onClickCard); // this는 function 이면 card, 화살표함수면 window
                 $wrapper.appendChild(card);
             }
         }
