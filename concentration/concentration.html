@@ -51,8 +51,10 @@
 </head>
 <body>
     <div id="wrapper"></div>
+    <div id="result"></div>
     <script>
         const $wrapper = document.querySelector('#wrapper');
+        const $result = document.querySelector('#result');
 
         const total = 20;
         const colors = ['red', 'orange', 'yellow', 'green', 'white', 'pink', 'gray', 'lightgreen', 'purple', 'black']; // rgb, hex값으로 해도 됨
@@ -64,6 +66,9 @@
         let clicked = [];
         let completed = [];
         let clickable = false;
+        let recordTime;
+        let startTime;
+        let endTime;
 
         function shuffle() { // 피셔-에이츠 방법 사용
             for (let i = 0; colorCopy.length > 0; i++) {
@@ -115,6 +120,9 @@
                 if(completed.length === total) {
                     setTimeout(() => {
                         alert('축하합니다');
+                        endTime = new Date();
+                        recordTime = endTime - startTime;
+                        $result.textContent = `${Math.floor(recordTime / 1000)}초 걸리셨습니다!`;
                     }, 1000);
                     return;
                 }
@@ -169,6 +177,7 @@
                 card.classList.remove('flipped');
             })
             clickable = true;
+            startTime = new Date();
         }, 5000);
 
     </script>
