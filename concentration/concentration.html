@@ -55,13 +55,13 @@
     <script>
         const $wrapper = document.querySelector('#wrapper');
         const $result = document.querySelector('#result');
-
-        const total = 20;
+        const total = parseInt(prompt('카드 개수를 짝수로 입력하세요 (최대 20)'));
         const colors = ['red', 'orange', 'yellow', 'green', 'white', 'pink', 'gray', 'lightgreen', 'purple', 'black']; // rgb, hex값으로 해도 됨
         // colors 원본을 바꾸게 하면 안됨. 
         // push, pop, unshift, shift, splie, sort - 원본 바꿈
         // concat, filter, forEach, every, some, find - 원본 안바꿈
-        let colorCopy = colors.concat(colors);
+        let colorSlice = colors.slice(0, total / 2);
+        let colorCopy = colorSlice.concat(colorSlice);
         let shuffled = [];
         let clicked = [];
         let completed = [];
