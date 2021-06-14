@@ -94,6 +94,7 @@
                 return; 
             }
 
+
             // this는 card
             this.classList.toggle('flipped');
             clicked.push(this);
@@ -103,7 +104,9 @@
             // clicked[0] (card) 태그 안에서 .card-back 선택
             const firstBackColor = clicked[0].querySelector('.card-back').style.backgroundColor;
             const secondBackColor = clicked[1].querySelector('.card-back').style.backgroundColor;
-            if (firstBackColor === secondBackColor) { // 두 카드가 같으면
+
+            // 두 카드가 같으면
+            if (firstBackColor === secondBackColor) { 
                 // completed.push(clicked[0]);
                 // completed.push(clicked[1]);
                 // clicked = [];
@@ -118,14 +121,17 @@
                 return;
             }
 
+             // 버그해결 - clickable 로 clicked 배열에 2개이상 못넣게하기 
+             // 이벤트 루프 특성 - 비동기 함수 특성상 클릭을 빨리 하면 배열 원소가 3~4개까지 찬다 
+            clickable = false;
+
             //틀렸으면
             setTimeout(() => {
                 clicked[0].classList.remove('flipped');
                 clicked[1].classList.remove('flipped');
                 clicked = [];
-            }, 1000)
-
-
+                clickable = true;
+            }, 1000);
         }
 
         function startGame() {
