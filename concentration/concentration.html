@@ -56,12 +56,16 @@
 
         const total = 12;
         const colors = ['red', 'orange', 'yellow', 'green', 'white', 'pink']; // rgb, hex값으로 해도 됨
+        // colors 원본을 바꾸게 하면 안됨. 
+        // push, pop, unshift, shift, splice, sort - 원본 바꿈
+        // concat, filter, forEach, every, some, find - 원본 안바꿈
         let colorCopy = colors.concat(colors);
         let shuffled = [];
         let clicked = [];
         let completed = [];
+        let clickable = false;
 
-        function shuffle() { // 피셔-에이츠 사용
+        function shuffle() { // 피셔-에이츠 방법 사용
             for (let i = 0; colorCopy.length > 0; i++) {
                 const randomIndex = Math.floor(Math.random() * colorCopy.length);
                 shuffled = shuffled.concat(colorCopy.splice(randomIndex, 1));
@@ -86,6 +90,10 @@
         }
 
         function onClickCard() {
+            if (!clickable || completed.includes(this) || clicked[0] === this) {
+                return; 
+            }
+
             // this는 card
             this.classList.toggle('flipped');
             clicked.push(this);
@@ -102,7 +110,9 @@
                 completed = completed.concat(clicked);
                 clicked = [];
                 if(completed.length === total) {
-                    alert('축하합니다!');
+                    setTimeout(() => {
+                        alert('축하합니다');
+                    }, 1000);
                     return;
                 }
                 return;
@@ -128,6 +138,18 @@
         }
 
         startGame();
+
+        function resetGame() {
+            clickable = false;
+            $wrapper.innerHTML = '';
+            // colors 원본을 바꾸게 하면 안됨. 
+            // push, pop, unshift, shift, splice, sort - 원본 바꿈
+            // concat, filter, forEach, every, some, find - 원본 안바꿈
+            colorCopy = colors.concat(colors);
+            shuffle = [];
+            completed = [];
+            startGame();
+        }
         
         document.querySelectorAll('.card').forEach((card, index) => {
             setTimeout(() => {
@@ -135,14 +157,13 @@
             }, 1000 + 100 * index);
         })
         
+        //카드 감추기
         setTimeout(() => {
             document.querySelectorAll('.card').forEach((card, index) => {
                 card.classList.remove('flipped');
             })
+            clickable = true;
         }, 5000);
-
-
-
 
     </script>
 </body> 
