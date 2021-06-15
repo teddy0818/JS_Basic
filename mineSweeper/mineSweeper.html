@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>지뢰찾기</title>
     <style>
-        table { border-collapse: collapse; border: 1px solid black;}
+        table { border-collapse: collapse;}
 
         td {
-            border: 1px solid black;
+            border: 1px solid white;
             text-align: center;
             line-height: 20px;
             width: 20px;
@@ -72,6 +72,41 @@
         return data;
     }
 
+    function onRightClick(event) {
+        event.preventDefault(); // 원래 기능 제거 (오른쪽클릭)
+        const target = event.target; // td
+        const rowIndex = target.parentNode.rowIndex; // target.parentNode : tr
+        const cellIndex = target.cellIndex;
+        let cellData = data[rowIndex][cellIndex];
+        // console.log(cellData);
+        if (cellData === CODE.MINE) {
+            data[rowIndex][cellIndex] = CODE.QUESTION_MINE; 
+            target.className = 'question';
+            target.textContent = '?';
+        } else if (cellData === CODE.QUESTION_MINE) {
+            data[rowIndex][cellIndex] = CODE.FLAG_MINE; 
+            target.className = 'flag';
+            target.textContent = '!';
+        } else if (cellData === CODE.FLAG_MINE) {
+            data[rowIndex][cellIndex] = CODE.MINE; 
+            target.className = 'opend';
+            target.textContent = 'X';
+        } else if (cellData === CODE.NORMAL) {
+            data[rowIndex][cellIndex] = CODE.QUESTION; 
+            target.className = 'question';
+            target.textContent = '?';
+        } else if (cellData === CODE.QUESTION) {
+            data[rowIndex][cellIndex] = CODE.FLAG; 
+            target.className = 'flag';
+            target.textContent = '!';
+        } else if (cellData === CODE.FLAG) {
+            data[rowIndex][cellIndex] = CODE.NORMAL; 
+            target.className = 'opend';
+            target.textContent = '';
+        }
+
+    }   
+
     function drawTable() {
         data = planMine();
         data.forEach((row) => {
@@ -84,10 +119,15 @@
                 $tr.append($td);
             });
             $tbody.append($tr);
+            //이벤트 버블링
+            $tbody.addEventListener('contextmenu', onRightClick); // contextmenu : 오른쪽 클릭
         });
     }
 
     drawTable();
+
+
+
 </script>
 </body>
 </html>
