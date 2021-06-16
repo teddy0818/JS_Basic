@@ -23,17 +23,20 @@
     </style>
 </head>
 <body>
-    <div id="time"></div>
+    <div id="time">0초</div>
     <table id="table">
         <tbody></tbody>
     </table>
     <div id="result"></div>
 <script>
-    const $time = document.querySelector('#time');
+    const $timer = document.querySelector('#time');
     const $tbody = document.querySelector('#table tbody');
     const $result = document.querySelector('#result');
-    const startTime;
-    const endTime;
+    let startTime = new Date();
+    const interval = setInterval(() => {
+        const time = Math.floor((new Date() - startTime) / 1000);
+        $timer.textContent = `${time}초`;
+    }, 1000);
     const row = 10; // 줄
     const cell = 10; // 칸
     const mine = 10;
@@ -155,11 +158,14 @@
         target.className = 'opened';
         data[rowIndex][cellIndex] = mineCount; 
         openCount++;
+        if(openCount == 1) startTime = new Date();
         if(openCount === row * cell - mine) {
+            const time = Math.floor((new Date() - startTime) / 1000);
+            clearInterval(interval);
             $tbody.removeEventListener('contextmenu', onRightClick);
             $tbody.removeEventListener('click', onLeftClick);
             setTimeout(() => {
-                alert('클리어!');
+                alert(`클리어! ${time}초 걸리셨습니다!`);
             }, 0);
         }
         return mineCount;
@@ -194,6 +200,7 @@
         } else if(cellData === CODE.MINE) { // 지뢰일 경우 - 펑!
             target.textContent = '펑';
             target.className = 'opened';
+            clearInterval(interval);
             $tbody.removeEventListener('contextmenu', onRightClick);
             $tbody.removeEventListener('click', onLeftClick);
         } else { // 나머지(지뢰 플래그, 지뢰 물음표 인 경우)- 아무반응 x
