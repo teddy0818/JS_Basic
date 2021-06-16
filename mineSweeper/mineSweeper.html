@@ -9,7 +9,7 @@
         table { border-collapse: collapse;}
 
         td {
-            border: 1px solid white;
+            border: 1px solid lightgrey;
             text-align: center;
             line-height: 20px;
             width: 20px;
@@ -49,12 +49,13 @@
             return i; 
         });
         const shuffle = [];
-         // 지뢰 10개를 랜덤하게 뽑음
+         // 지뢰 10개를 랜덤하게 배치하기 위해 100중 임의 숫자 10개를 뽑음 ex) 56, 68, 85...
         while(candidate.length > row * cell - mine) {
-            //splice() : 원본 배열을 수정
+            //splice() : 원본 배열을 일부 때와서 새로운 배열을 만듬
             const chosen = candidate.splice(Math.floor(Math.random()*candidate.length), 1)[0];
             shuffle.push(chosen);
         }
+        // data에 배열 및 CODE.NORMAL 값을 채움 - 2차원배열
         for(let i=0; i<row; i++) {
             let rowData = [];
             data.push(rowData);
@@ -63,6 +64,8 @@
             }
         }
 
+        // 지뢰 10개를 랜덤하게 배치
+        // shuffle에서 숫자를 가져옴 ex) 56, 68, 85
         for(let i=0; i<shuffle.length; i++) {
             const ver = Math.floor(shuffle[i] / cell); // n번째 줄
             const hor = shuffle[i] % cell; // n번째 칸
@@ -89,7 +92,7 @@
             target.textContent = '!';
         } else if (cellData === CODE.FLAG_MINE) {
             data[rowIndex][cellIndex] = CODE.MINE; 
-            target.className = 'opend';
+            target.className = '';
             target.textContent = 'X';
         } else if (cellData === CODE.NORMAL) {
             data[rowIndex][cellIndex] = CODE.QUESTION; 
@@ -101,11 +104,58 @@
             target.textContent = '!';
         } else if (cellData === CODE.FLAG) {
             data[rowIndex][cellIndex] = CODE.NORMAL; 
-            target.className = 'opend';
+            target.className = '';
             target.textContent = '';
         }
 
     }   
+
+    // 논리연산자의 또 다른 역할
+    // A && B : A가 존재하면 B를 실행하라
+    // A || B : A가 존재하지 않으면 B를 실행하라
+
+    //data[-1] : undefined
+    //data[-1][-1] -> undefined[-1] : 에러
+    // 이런 에러를 막기 위해 옵셔널 체이닝(optional chaining)인 '?.' 를 쓴다
+    // ex) const a = { hello : [] }
+    // a.hello[-1]?.cdfg.ghe : 에러가 안뜨고 undefined가 뜸
+    
+
+    //1,2,3
+    //4,5,6
+    //7,8,9
+    // 5를 기준으로 생각해보자
+    function countMine(rowIndex, cellIndex) {
+        const mines = [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE];
+        let i = 0; // 주변에 깔린 지뢰가 있으면 i++
+        mines.includes(data[rowIndex-1]?.[cellIndex-1]) && i++;
+        mines.includes(data[rowIndex-1]?.[cellIndex]) && i++;
+        mines.includes(data[rowIndex-1]?.[cellIndex+1]) && i++;
+        mines.includes(data[rowIndex][cellIndex-1]) && i++; // 같은줄이면 rowIndex는 무조건 존재!
+        mines.includes(data[rowIndex][cellIndex+1]) && i++; // 같은줄이면 rowIndex는 무조건 존재!
+        mines.includes(data[rowIndex+1]?.[cellIndex-1]) && i++;
+        mines.includes(data[rowIndex+1]?.[cellIndex]) && i++;
+        mines.includes(data[rowIndex+1]?.[cellIndex+1]) && i++;
+        console.log(i);
+        return i;
+    }
+
+    function onLeftClick(event) {
+        const target = event.target;
+        const rowIndex = target.parentNode.rowIndex;
+        const cellIndex = target.cellIndex;
+        let cellData = data[rowIndex][cellIndex];
+        if (cellData == CODE.NORMAL) {
+            let mineCount = countMine(rowIndex, cellIndex);
+            target.textContent = mineCount;
+            target.className = 'opened';
+            data[rowIndex][cellIndex] = mineCount;
+        } else if(cellData === CODE.MINE) { // 지뢰일 경우 - 펑!
+
+        } else { // 지뢰 플래그, 지뢰 물음표 인 경우 - 아무반응 x
+
+        }
+    }
 
     function drawTable() {
         data = planMine();
@@ -114,13 +164,14 @@
             row.forEach((cell) => {
                 const $td = document.createElement('td');
                 if (cell === CODE.MINE) {
-                    $td.textContent = 'X'; // 개발 편의를 위해
+                    $td.textContent = 'X'; // 개발 편의를 위해 잠시 나타내는 것
                 }
                 $tr.append($td);
             });
             $tbody.append($tr);
-            //이벤트 버블링
+            //이벤트 버블링 이용
             $tbody.addEventListener('contextmenu', onRightClick); // contextmenu : 오른쪽 클릭
+            $tbody.addEventListener('click', onLeftClick);
         });
     }
 
