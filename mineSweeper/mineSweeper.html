@@ -81,7 +81,6 @@
         const rowIndex = target.parentNode.rowIndex; // target.parentNode : tr
         const cellIndex = target.cellIndex;
         let cellData = data[rowIndex][cellIndex];
-        // console.log(cellData);
         if (cellData === CODE.MINE) {
             data[rowIndex][cellIndex] = CODE.QUESTION_MINE; 
             target.className = 'question';
@@ -110,7 +109,7 @@
 
     }   
 
-    // 논리연산자의 또 다른 역할
+    // 논리연산자의 또 다른 해석
     // A && B : A가 존재하면 B를 실행하라
     // A || B : A가 존재하지 않으면 B를 실행하라
 
@@ -136,8 +135,40 @@
         mines.includes(data[rowIndex+1]?.[cellIndex-1]) && i++;
         mines.includes(data[rowIndex+1]?.[cellIndex]) && i++;
         mines.includes(data[rowIndex+1]?.[cellIndex+1]) && i++;
-        console.log(i);
         return i;
+    }
+ 
+    function open(rowIndex, cellIndex) {
+        if (data[rowIndex]?.[cellIndex] >= CODE.OPENED) return;
+        const target = $tbody.children[rowIndex]?.children[cellIndex];
+        if (!target) return;
+        const mineCount = countMine(rowIndex, cellIndex);
+        // let mineCount = countMine(rowIndex, cellIndex);
+        // JS에선 0이 false 인데, 사실 0은 의미있는 값이다.
+        // undefined 과 null만 거르고 싶으면 Nullish coalescing operator '??' 을 쓰자
+        target.textContent = mineCount || ''; // 카운트가 없으면 빈칸
+        target.className = 'opened';
+        data[rowIndex][cellIndex] = mineCount; 
+        return mineCount;
+    }
+
+    function openAround(rI, cI) {
+        //재귀, Maximum call stack size exceeded 해결
+        //콜스택(호출스택)이 초과해서 생기는 에러
+        //setTimeout() 을 이용해서 백그라운드와 테스트큐에 부하를 나누자!
+        setTimeout(() => {
+            const count = open(rI, cI);
+            if (count === 0) {
+                openAround(rI-1, cI-1);
+                openAround(rI-1, cI);
+                openAround(rI-1, cI+1);
+                openAround(rI, cI-1);
+                openAround(rI, cI+1);
+                openAround(rI+1, cI-1);
+                openAround(rI+1, cI);
+                openAround(rI+1, cI+1);
+            }
+        })
     }
 
     function onLeftClick(event) {
@@ -145,15 +176,15 @@
         const rowIndex = target.parentNode.rowIndex;
         const cellIndex = target.cellIndex;
         let cellData = data[rowIndex][cellIndex];
-        if (cellData == CODE.NORMAL) {
-            let mineCount = countMine(rowIndex, cellIndex);
-            target.textContent = mineCount;
-            target.className = 'opened';
-            data[rowIndex][cellIndex] = mineCount;
+        if (cellData === CODE.NORMAL) {
+            openAround(rowIndex, cellIndex);
         } else if(cellData === CODE.MINE) { // 지뢰일 경우 - 펑!
-
-        } else { // 지뢰 플래그, 지뢰 물음표 인 경우 - 아무반응 x
-
+            target.textContent = '펑';
+            target.className = 'opened';
+            $tbody.removeEventListener('contextmenu', onRightClick);
+            $tbody.removeEventListener('click', onLeftClick);
+        } else { // 나머지(지뢰 플래그, 지뢰 물음표 인 경우)- 아무반응 x
+            
         }
     }
 
