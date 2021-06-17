@@ -23,23 +23,32 @@
     </style>
 </head>
 <body>
+    <form id="inputForm">
+        <input type="number" id="inputRow" placeholder="열 수를 입력하세요">
+        <input type="number" id="inputCell" placeholder="칸 수를 입력하세요">
+        <input type="number" id="inputMine" placeholder="지뢰 수를 입력하세요">
+        <input type="submit" id="inputSubmit">
+    </form>
     <div id="time">0초</div>
     <table id="table">
         <tbody></tbody>
     </table>
     <div id="result"></div>
 <script>
+    const $inputForm = document.querySelector('#inputForm');
+    const $inputRow = document.querySelector('#inputRow');
+    const $inputCell = document.querySelector('#inputCell');
+    const $inputMine = document.querySelector('#inputMine');
+    const $inputSubmit = document.querySelector('#inputSubmit');
+
     const $timer = document.querySelector('#time');
     const $tbody = document.querySelector('#table tbody');
     const $result = document.querySelector('#result');
-    let startTime = new Date();
-    const interval = setInterval(() => {
-        const time = Math.floor((new Date() - startTime) / 1000);
-        $timer.textContent = `${time}초`;
-    }, 1000);
-    const row = 10; // 줄
-    const cell = 10; // 칸
-    const mine = 10;
+    let row = 0; // 줄
+    let cell = 0; // 칸
+    let mine = 0;
+    let startTime;
+    let interval;
     const CODE = {
         NORMAL: -1,
         QUESTION: -2,
@@ -51,6 +60,19 @@
     }
     let data = [];
     let openCount = 0;
+
+    $inputForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        row = event.target.inputRow.value;
+        cell = event.target.inputCell.value;
+        mine = event.target.inputMine.value;
+        startTime = new Date();
+        interval = setInterval(() => {
+        let time = Math.floor((new Date() - startTime) / 1000);
+            $timer.textContent = `${time}초`;
+        }, 1000);
+        drawTable();
+    })
 
     function planMine() {
         const candidate = Array(row * cell).fill().map((arr, i) => { // i는 인덱스
@@ -225,10 +247,6 @@
             $tbody.addEventListener('click', onLeftClick);
         });
     }
-
-    drawTable();
-
-
 
 </script>
 </body>
