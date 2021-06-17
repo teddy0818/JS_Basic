@@ -61,18 +61,25 @@
     let data = [];
     let openCount = 0;
 
-    $inputForm.addEventListener('submit', (event) => {
+    function onSubmit(event) {
         event.preventDefault();
         row = event.target.inputRow.value;
         cell = event.target.inputCell.value;
         mine = event.target.inputMine.value;
+        // console.log(row + cell + mine);
+        openCount = 0;
+        data = [];
+        document.querySelector('#table tbody').innerHTML = "";
+        drawTable();
         startTime = new Date();
         interval = setInterval(() => {
         let time = Math.floor((new Date() - startTime) / 1000);
             $timer.textContent = `${time}초`;
         }, 1000);
-        drawTable();
-    })
+    }
+
+    $inputForm.addEventListener('submit', onSubmit);
+
 
     function planMine() {
         const candidate = Array(row * cell).fill().map((arr, i) => { // i는 인덱스
@@ -122,7 +129,7 @@
         } else if (cellData === CODE.FLAG_MINE) {
             data[rowIndex][cellIndex] = CODE.MINE; 
             target.className = '';
-            target.textContent = 'X';
+            // target.textContent = 'X';
         } else if (cellData === CODE.NORMAL) {
             data[rowIndex][cellIndex] = CODE.QUESTION; 
             target.className = 'question';
@@ -237,7 +244,7 @@
             row.forEach((cell) => {
                 const $td = document.createElement('td');
                 if (cell === CODE.MINE) {
-                    $td.textContent = 'X'; // 개발 편의를 위해 잠시 나타내는 것
+                 //   $td.textContent = 'X'; // 개발 편의를 위해 잠시 나타내는 것
                 }
                 $tr.append($td);
             });
