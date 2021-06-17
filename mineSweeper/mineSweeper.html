@@ -69,7 +69,8 @@
         // console.log(row + cell + mine);
         openCount = 0;
         data = [];
-        document.querySelector('#table tbody').innerHTML = "";
+        $tbody.innerHTML = "";
+        $result.innerHTML = "";
         drawTable();
         startTime = new Date();
         interval = setInterval(() => {
@@ -130,6 +131,7 @@
             data[rowIndex][cellIndex] = CODE.MINE; 
             target.className = '';
             // target.textContent = 'X';
+            target.textContent = '';
         } else if (cellData === CODE.NORMAL) {
             data[rowIndex][cellIndex] = CODE.QUESTION; 
             target.className = 'question';
@@ -194,7 +196,8 @@
             $tbody.removeEventListener('contextmenu', onRightClick);
             $tbody.removeEventListener('click', onLeftClick);
             setTimeout(() => {
-                alert(`클리어! ${time}초 걸리셨습니다!`);
+                alert(`Clear! ${time}초 걸리셨습니다!`);
+                $result.textContent = 'Clear!!'
             }, 0);
         }
         return mineCount;
@@ -228,6 +231,8 @@
             openAround(rowIndex, cellIndex);
         } else if(cellData === CODE.MINE) { // 지뢰일 경우 - 펑!
             target.textContent = '펑';
+            alert('Game Over');
+            $result.textContent = 'Game Over';
             target.className = 'opened';
             clearInterval(interval);
             $tbody.removeEventListener('contextmenu', onRightClick);
