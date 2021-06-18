@@ -27,7 +27,7 @@
         <input type="number" id="inputRow" placeholder="열 수를 입력하세요">
         <input type="number" id="inputCell" placeholder="칸 수를 입력하세요">
         <input type="number" id="inputMine" placeholder="지뢰 수를 입력하세요">
-        <input type="submit" id="inputSubmit">
+        <input type="submit" id="inputSubmit" value="게임시작">
     </form>
     <div id="time">0초</div>
     <table id="table">
@@ -198,7 +198,7 @@
             setTimeout(() => {
                 alert(`Clear! ${time}초 걸리셨습니다!`);
                 $result.textContent = 'Clear!!'
-            }, 0);
+            }, 1000);
         }
         return mineCount;
     }
