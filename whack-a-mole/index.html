@@ -44,7 +44,7 @@
 </head>
 <body>
 <div>
-  <span id="timer">8</span>초&nbsp;
+  <span id="timer">60</span>초&nbsp;
   <span id="score">0</span>점
   <button id="start">시작</button>
 </div>
@@ -120,10 +120,23 @@
     const holes = [0,0,0,0,0,0,0,0,0] // 구멍 9개
     let started = false;
     let score = 0;
+    let time = 10; 
+
     $start.addEventListener('click', () => {
         if (started) return; // 이미 시작했으면 무시
         started = true;
         console.log('게임시작');
+        const timerId = setInterval(() => {
+            time = (time * 10 - 1) / 10; // 정수로 계산 후 10으로 나눔.
+            $timer.textContent =  time;
+            if(time === 0) {
+                setTimeout(() => {
+                    clearInterval(tickId);
+                    clearInterval(timerId);
+                    alert(`게임 종료!  점수는 ${score}점 입니다! `);
+                }, 50);
+            }
+        }, 100);
         const tickId = setInterval(tick, 1000);
         tick();
     });
@@ -156,8 +169,12 @@
     }
 
     $$cells.forEach(($cell, index) => {
+        //두더지 클릭 시
         $cell.querySelector('.gopher').addEventListener('click', (event) => {
-            console.log('되나?')
+            if(!event.target.classList.contains('dead')) {
+                score += 1;
+                $score.textContent = score;
+            }
             const $gopher = event.target;
             event.target.classList.add('dead')
             event.target.classList.add('hidden')
@@ -167,7 +184,12 @@
                 event.target.classList.remove('dead');
             }, 1000);
         });
+        //폭탄 클릭 시 
         $cell.querySelector('.bomb').addEventListener('click', (event) => {
+            if(!event.target.classList.contains('boom')) {
+                score -= 1;
+                $score.textContent = score;
+            }
             event.target.classList.add('boom')
             event.target.classList.add('hidden')
             clearTimeout(holes[index]); // 기존 내려가는 타이머 제거
