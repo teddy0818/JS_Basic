@@ -128,6 +128,8 @@
         tick();
     });
 
+
+    //0, 1, 2, 3, 4, 5, 6, 7, 9 에서 범위를 정하는 방법으로 확률을 표현
     let gopherPercent = 0.3; // 30퍼 확률
     let bombPercent = 0.5 // 20퍼 확률
 
@@ -152,6 +154,29 @@
             }
         });
     }
+
+    $$cells.forEach(($cell, index) => {
+        $cell.querySelector('.gopher').addEventListener('click', (event) => {
+            console.log('되나?')
+            const $gopher = event.target;
+            event.target.classList.add('dead')
+            event.target.classList.add('hidden')
+            clearTimeout(holes[index]); // 기존 내려가는 타이머 제거
+            setTimeout(() => {
+                holes[index] = 0;
+                event.target.classList.remove('dead');
+            }, 1000);
+        });
+        $cell.querySelector('.bomb').addEventListener('click', (event) => {
+            event.target.classList.add('boom')
+            event.target.classList.add('hidden')
+            clearTimeout(holes[index]); // 기존 내려가는 타이머 제거
+            setTimeout(() => {
+                holes[index] = 0;
+                event.target.classList.remove('boom');
+            }, 1000);
+        });
+    })
 
 
 </script>
