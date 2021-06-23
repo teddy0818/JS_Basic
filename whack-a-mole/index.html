@@ -116,4 +116,30 @@
     const $game = document.querySelector('#game');
     const $start = document.querySelector('#start');
     const $$cells = document.querySelectorAll('.cell');
+
+    const holes = [0,0,0,0,0,0,0,0,0] // 구멍 9개
+    let started = false;
+    let score = 0;
+    $start.addEventListener('click', () => {
+        if (started) return; // 이미 시작했으면 무시
+        started = true;
+        console.log('게임시작');
+        const tickId = setInterval(tick, 1000);
+        tick();
+    });
+
+    function tick() {
+        holes.forEach((hole, index) => {
+            if(hole) return; // 무언가 일어나고있으면 return!
+            const $gopher = $$cells[index].querySelector('.gopher');
+            holes[index] = setTimeout(() => { //  타이머 id를 저장함 
+                $gopher.classList.add('hidden');
+                holes[index] = 0;
+            }, 1000);
+            $gopher.classList.remove('hidden');
+        })
+
+    }
+
+
 </script>
