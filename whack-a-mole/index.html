@@ -128,17 +128,29 @@
         tick();
     });
 
+    let gopherPercent = 0.3; // 30퍼 확률
+    let bombPercent = 0.5 // 20퍼 확률
+
     function tick() {
         holes.forEach((hole, index) => {
-            if(hole) return; // 무언가 일어나고있으면 return!
-            const $gopher = $$cells[index].querySelector('.gopher');
-            holes[index] = setTimeout(() => { //  타이머 id를 저장함 
-                $gopher.classList.add('hidden');
-                holes[index] = 0;
-            }, 1000);
-            $gopher.classList.remove('hidden');
-        })
-
+            if(hole) return; // 무언가 일어나고있으면 return! // 2초에 한번씩 실행하게 됨
+            const randomValue = Math.random(); 
+            if(randomValue < gopherPercent) {
+                const $gopher = $$cells[index].querySelector('.gopher');
+                holes[index] = setTimeout(() => { //  타이머 id를 저장함 
+                    $gopher.classList.add('hidden');
+                    holes[index] = 0;
+                }, 1000);
+                $gopher.classList.remove('hidden');
+            } else if(randomValue < bombPercent) {
+                const $gopher = $$cells[index].querySelector('.bomb');
+                holes[index] = setTimeout(() => { //  타이머 id를 저장함 
+                    $gopher.classList.add('hidden');
+                    holes[index] = 0;
+                }, 1000);
+                $gopher.classList.remove('hidden');
+            }
+        });
     }
 
 
