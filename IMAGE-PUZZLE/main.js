@@ -10,9 +10,17 @@ const tileCount = 16;
 //     $container.append($li);
 // }
 
-let tiles = [];
-tiles = createImageTiles();
-shuffle(tiles).forEach(tile=>$container.appendChild(tile)) // 인자가 하나인경우 중괄호 생략가능
+setGame();
+
+function setGame() {
+    let tiles = [];
+    tiles = createImageTiles();
+    tiles.forEach(tile=>$container.appendChild(tile))
+    setTimeout(() => {
+        shuffle(tiles).forEach(tile=>$container.appendChild(tile)) // 인자가 하나인경우 중괄호 생략가능
+    }, 3000);
+}
+
 
 function createImageTiles() {
     const tempArray = [];
