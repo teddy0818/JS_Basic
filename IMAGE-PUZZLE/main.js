@@ -95,7 +95,7 @@ $container.addEventListener('drop', e => {
         if(dragged.el.nextSibling) {
             originPrice = dragged.el.nextSibling;
         } else {
-            originPrice = dragged.el.previousSibling;ㅋㅋ
+            originPrice = dragged.el.previousSibling;
             isLast = true;
         }
 
