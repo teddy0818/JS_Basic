@@ -2,6 +2,7 @@ const $container = document.querySelector('.image-container');
 const $startButton = document.querySelector('.start-button');
 const $gameText = document.querySelector('.game-text');
 const $playTime = document.querySelector('.play-time');
+const $hintButton = document.querySelector('.hint-button');
 
 let gamePlaying = true;
 const tileCount = 16;
@@ -24,7 +25,6 @@ function setGame() {
         shuffle(tiles).forEach(tile=>$container.appendChild(tile)) // 인자가 하나인경우 중괄호 생략가능
 
         startTime = new Date();
-
         timer = setInterval(() => {
             $playTime.textContent = Math.floor((new Date() - startTime) / 1000);
         }, 1000);
@@ -37,7 +37,7 @@ function createImageTiles() {
     Array(tileCount).fill().forEach((v, i) => {
         const $li = document.createElement('li');
         $li.setAttribute('data-index', i);
-        $li.textContent = i;
+        // $li.textContent = i;
         $li.setAttribute('draggable', true); // 드래그 되게하기
         $li.classList.add(`list${i}`);
         tempArray.push($li);
@@ -48,8 +48,9 @@ function createImageTiles() {
 
 function checkStatus() {
     const currentList = [...$container.children];
+    // 한줄로 쓸 땐 중괄호 및 리턴값 생략 가능
     const unMatchedList = currentList.filter((child, index) => Number(child.getAttribute('data-index'))  !== index)
-    console.log(unMatchedList);
+    // console.log(unMatchedList);
     if(unMatchedList.length === 0) {
         //game finished 
         clearInterval(timer);
@@ -62,6 +63,7 @@ function shuffle(array){
     let index = array.length - 1;
     while(index > 0) {
         const randomIndex = Math.floor(Math.random()*(index+1));
+        // 배열안에서 섞음
         [array[index], array[randomIndex]] = [array[randomIndex], array[index]];
         index--;
     }
@@ -80,7 +82,6 @@ $container.addEventListener('dragstart', e => {
 });
 $container.addEventListener('dragover', e => {
     e.preventDefault(); // 놓았을때 drop 이 실행되도록 함
-    
 });
 $container.addEventListener('drop', e => {
     if(!gamePlaying) return;
@@ -89,10 +90,12 @@ $container.addEventListener('drop', e => {
         let originPrice;
         let isLast = false;
 
+
+        // 마지막 칸 값은 nextSibling이 null 이다
         if(dragged.el.nextSibling) {
             originPrice = dragged.el.nextSibling;
         } else {
-            originPrice = dragged.el.previousSibling
+            originPrice = dragged.el.previousSibling;ㅋㅋ
             isLast = true;
         }
 
@@ -108,3 +111,9 @@ $container.addEventListener('drop', e => {
 $startButton.addEventListener('click', () => {
     setGame();
 });
+
+$hintButton.addEventListener('click', () => {
+    [...$container.children].forEach((child, i) => {
+        child.textContent = child.getAttribute('data-index');
+    })
+})

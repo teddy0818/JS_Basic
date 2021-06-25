@@ -28,11 +28,11 @@ ul {
 li {
     width: 100px;
     height: 100px;
-    border: 1px solid red;
+    /* border: 1px solid red; */
     color: var(--white);
     background: url("https://placeimg.com/400/400/any");
 }
-.start-button {
+.start-button, .hint-button{
     background: var(--facebook);
     color: var(--white);
     border: none;
