@@ -44,7 +44,7 @@
 </head>
 <body>
 <div>
-  <span id="timer">60</span>초&nbsp;
+  <span id="timer">10</span>초&nbsp;
   <span id="score">0</span>점
   <button id="start">시작</button>
 </div>
@@ -124,10 +124,10 @@
     let timerId;
     let tickId;
 
+    //시작버튼
     $start.addEventListener('click', () => {
         if (started) return; // 이미 시작했으면 무시
         started = true;
-        console.log('게임시작');
         timerId = setInterval(() => {
             time = (time * 10 - 1) / 10; // 정수로 계산 후 10으로 나눔.
             $timer.textContent = time;
@@ -138,7 +138,7 @@
                     alert(`게임 종료!  점수는 ${score}점 입니다! `);
                 }, 50);
             }
-        }, 100);
+        }, 100); // 0.1 초마다 시간이 줄어드는 걸 표시
         tickId = setInterval(tick, 1000);
         tick();
     });
