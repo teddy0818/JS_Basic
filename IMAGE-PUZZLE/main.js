@@ -4,19 +4,21 @@ const $gameText = document.querySelector('.game-text');
 const $playTime = document.querySelector('.play-time');
 
 const tileCount = 16;
-// 내가 한 방식
-// for(let i=0; i<tileCount; i++) {
-//     const $li = document.createElement('li');
-//     $container.append($li);
-// }
+let tiles = [];
+const dragged = {
+    el: null,
+    class: null,
+    index: null
+} 
 
 setGame();
 
 function setGame() {
-    let tiles = [];
+    $container.innerHTML = '';
     tiles = createImageTiles();
     tiles.forEach(tile=>$container.appendChild(tile))
     setTimeout(() => {
+        $container.innerHTML = '';
         shuffle(tiles).forEach(tile=>$container.appendChild(tile)) // 인자가 하나인경우 중괄호 생략가능
     }, 3000);
 }
@@ -27,6 +29,7 @@ function createImageTiles() {
     Array(tileCount).fill().forEach((v, i) => {
         const $li = document.createElement('li');
         $li.setAttribute('data-index', i);
+        $li.setAttribute('draggable', true); // 드래그 되게하기
         $li.classList.add(`list${i}`);
         tempArray.push($li);
         // $container.appendChild($li);
@@ -42,5 +45,37 @@ function shuffle(array){
         index--;
     }
     return array;
-
 }
+
+//event
+$container.addEventListener('dragstart', e => {
+    const obj = e.target;
+    dragged.el = obj;
+    dragged.class = obj.className;
+    // object를 배열로 만들어줌
+    dragged.index = [...obj.parentNode.children].indexOf(obj);
+    // console.log(dragged.index);
+});
+$container.addEventListener('dragover', e => {
+    e.preventDefault(); // 놓았을때 drop 이 실행되도록 함
+    
+});
+$container.addEventListener('drop', e => {
+    const obj = e.target;
+    if(obj.className !== dragged.className) {
+        let originPrice;
+        let isLast = false;
+
+        if(dragged.el.nextSibling) {
+            originPrice = dragged.el.nextSibling;
+        } else {
+            originPrice = dragged.el.previousSibling
+            isLast = true;
+        }
+
+        const droppedIndex = [...obj.parentNode.children].indexOf(obj);
+        // 순서 파악후 드래그 되게 만듬
+        dragged.index > droppedIndex ? obj.before(dragged.el) : obj.after(dragged.el);
+        isLast ? originPrice.after(obj) : originPrice.before(obj);
+    }
+});
