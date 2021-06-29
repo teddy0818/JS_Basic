@@ -47,6 +47,7 @@
   <span id="timer">10</span>초&nbsp;
   <span id="score">0</span>점
   <button id="start">시작</button>
+  <div id="mention"></div>
 </div>
 <div id="game">
   <div class="row">
@@ -116,6 +117,7 @@
     const $game = document.querySelector('#game');
     const $start = document.querySelector('#start');
     const $$cells = document.querySelectorAll('.cell');
+    const $mention = document.querySelector('#mention');
 
     const holes = [0,0,0,0,0,0,0,0,0] // 구멍 9개
     let started = false;
@@ -136,6 +138,8 @@
                     clearInterval(tickId);
                     clearInterval(timerId);
                     alert(`게임 종료!  점수는 ${score}점 입니다! `);
+                    $mention.innerHTML = `게임 종료!  점수는 ${score}점 입니다!
+                    <br> 다시 시작하려면 새로고침을 해주세요!`
                 }, 50);
             }
         }, 100); // 0.1 초마다 시간이 줄어드는 걸 표시
@@ -198,6 +202,8 @@
             if(score < 0) {
                     clearInterval(tickId);
                     clearInterval(timerId);
+                    $mention.innerHTML = `게임 종료! 목숨이 다했습니다!
+                    <br> 다시 시작하려면 새로고침을 해주세요!`
                     setTimeout(() => {
                         alert('목숨을 다했습니다. Game Over!!');
                     }, 50);
